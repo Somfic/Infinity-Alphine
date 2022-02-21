@@ -66,7 +66,7 @@ public abstract class System {
      * 
      * @return the engine of this system
      */
-    public final World getEngine() {
+    public final World getWorld() {
         return world;
     }
 
@@ -76,7 +76,7 @@ public abstract class System {
      * 
      * <p>
      * The engine provided as parameter is identical to the engine that will be
-     * returned by the {@link #getEngine} method.
+     * returned by the {@link #getWorld} method.
      * </p>
      * 
      * @param e
@@ -91,7 +91,7 @@ public abstract class System {
      * 
      * <p>
      * The engine provided as parameter is identical to the engine that will be
-     * returned by the {@link #getEngine} method.
+     * returned by the {@link #getWorld} method.
      * </p>
      * 
      * @param e

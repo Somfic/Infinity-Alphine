@@ -7,7 +7,6 @@ import ecs.EntityFilter;
 import ecs.System;
 import ecs.World;
 import javafx.scene.canvas.Canvas;
-import logging.Logger;
 import org.jfree.fx.FXGraphics2D;
 
 import java.awt.*;
@@ -31,7 +30,7 @@ public class TextSystem extends System {
 
     @Override
     public void onUpdate(double dt) {
-        List<Entity> entities = getEngine().getEntities(filter);
+        List<Entity> entities = getWorld().getEntities(filter);
 
         int width = (int)Math.ceil(canvas.getWidth() / 2);
         int height = (int)Math.ceil(canvas.getHeight() / 2);

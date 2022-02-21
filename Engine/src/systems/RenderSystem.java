@@ -32,7 +32,7 @@ public class RenderSystem extends System {
 
     @Override
     public void onUpdate(double dt) {
-        List<Entity> entities = getEngine().getEntities(this.filter);
+        List<Entity> entities = getWorld().getEntities(this.filter);
 
         int width = (int)Math.ceil(canvas.getWidth());
         int height = (int)Math.ceil(canvas.getHeight());
