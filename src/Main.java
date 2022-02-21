@@ -13,6 +13,7 @@ import systems.RenderSystem;
 import systems.TextSystem;
 
 import java.awt.*;
+import java.util.Locale;
 
 public class Main extends Application {
 
@@ -32,18 +33,7 @@ public class Main extends Application {
         world.addSystem(new CanvasSystem(stage, canvas));
         world.addSystem(new RenderSystem(canvas));
         world.addSystem(new TextSystem(canvas));
-
-        for (int i = 0; i < 100; i++) {
-            Entity entity = new Entity("Henlo");
-
-            // Random position
-            entity.addComponent(new Transform().setScale(10).setPosition(Math.random() * 1000 - 500, Math.random() * 800 - 400, 0).setRotation(Math.random() * 360));
-            entity.addComponent(new FlatMaterial().setFillColor(Color.getHSBColor((float) Math.random(), (float) Math.random(), (float) Math.random())).setFilled(true));
-            entity.addComponent(new Shape(Shape.PrimitiveShape.RECTANGLE));
-            //entity.addScript(new TestScript());
-
-            world.addEntity(entity);
-        }
+        world.addSystem(new TestSystem());
 
         this.fpsCounter = new Entity("FPS Counter");
         fpsCounter.addComponent(new Transform().setStatic(true).setPosition(10, 20, 0));
@@ -53,7 +43,7 @@ public class Main extends Application {
         AnimationTimer timer = new AnimationTimer() {
             long last = -1;
 
-            final double smoothing = 0.99f;
+            final double smoothing = 0.9f;
 
             double averageFps = -1f;
             double averageDelta = -1f;
@@ -72,7 +62,7 @@ public class Main extends Application {
                 double fps = 1f / delta * 1e9;
 
                 if (averageFps < 0) {
-                    averageFps = 30;
+                    averageFps = 60;
                 } else {
                     averageFps = averageFps * smoothing + fps * (1.0 - smoothing);
                 }
@@ -88,7 +78,7 @@ public class Main extends Application {
                 fpsCounter.getComponent(Text.class).setColor(Color.getHSBColor(hue, 1f, 1f));
 
 
-                fpsCounter.getComponent(Text.class).setText(String.format("%.0f", averageFps) + "fps | " + String.format("%.2f", averageDelta) + "ms");
+                fpsCounter.getComponent(Text.class).setText(String.format(Locale.ENGLISH, "%.0f", averageFps) + "fps | " + String.format(Locale.ENGLISH, "%.2f", averageDelta) + "ms");
 
                 last = now;
             }
