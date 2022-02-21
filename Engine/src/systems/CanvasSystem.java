@@ -1,7 +1,7 @@
 package systems;
 
 import ecs.World;
-import ecs.EngineSystem;
+import ecs.System;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -15,23 +15,21 @@ import logging.LogListener;
 import logging.Logger;
 
 
-public class CanvasSystem extends EngineSystem implements LogListener {
+public class CanvasSystem extends System implements LogListener {
 
     private final Stage stage;
     private final Canvas canvas;
-    private final boolean isDebug;
     private TextArea consoleArea;
 
-    public CanvasSystem(Stage stage, Canvas canvas, boolean isDebug) {
+    public CanvasSystem(Stage stage, Canvas canvas) {
         super();
         this.stage = stage;
         this.canvas = canvas;
-        this.isDebug = isDebug;
     }
 
     @Override
     public void onStart(World e) {
-        if(!this.isDebug) {
+        if(e.isDebug()) {
             logging.Logger.debug("Creating release mode canvas");
 
             // Resize

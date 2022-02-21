@@ -20,7 +20,7 @@ package ecs;
  * entities (e.g. camera management or centralized input processing).
  * </p>
  */
-public abstract class EngineSystem {
+public abstract class System {
 
 	/** Whether this system is enabled or disabled. */
 	private boolean enabled = true;

@@ -11,7 +11,6 @@ public class FlatMaterial extends Component {
 
     private boolean isFilled;
 
-
     public Color getFillColor() {
         return fillColor;
     }

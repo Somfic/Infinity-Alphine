@@ -4,24 +4,25 @@ import components.FlatMaterial;
 import components.Shape;
 import components.Transform;
 import ecs.World;
-import ecs.EngineSystem;
+import ecs.System;
 import ecs.Entity;
-import ecs.EntityFamily;
+import ecs.EntityFilter;
 import javafx.scene.canvas.Canvas;
 import logging.Logger;
 import org.jfree.fx.FXGraphics2D;
 
+import java.awt.*;
 import java.util.List;
 
-public class RenderSystem extends EngineSystem {
+public class RenderSystem extends System {
     private final Canvas canvas;
     private FXGraphics2D graphics;
 
-    private EntityFamily filter;
+    private final EntityFilter filter;
 
     public RenderSystem(Canvas canvas) {
         this.canvas = canvas;
-        this.filter = EntityFamily.create(Transform.class, Shape.class, FlatMaterial.class);
+        this.filter = EntityFilter.create(Transform.class, Shape.class, FlatMaterial.class);
     }
 
     @Override
@@ -36,11 +37,16 @@ public class RenderSystem extends EngineSystem {
         int width = (int)Math.ceil(canvas.getWidth());
         int height = (int)Math.ceil(canvas.getHeight());
 
+        // todo: move this somewhere else? potential issue if this is done in the wrong order...
         // Clear the canvas
+        graphics.setColor(Color.BLACK);
         graphics.clearRect(0, 0, width, height);
 
+        width = (int)Math.ceil(canvas.getWidth() / 2);
+        height = (int)Math.ceil(canvas.getHeight() / 2);
+
         // Translate to center of canvas
-        graphics.translate(width / 2, height / 2);
+        graphics.translate(width, height);
 
         for (Entity entity : entities) {
             Transform transform = entity.getComponent(Transform.class);
@@ -48,7 +54,7 @@ public class RenderSystem extends EngineSystem {
             FlatMaterial material = entity.getComponent(FlatMaterial.class);
 
             // Translate to entity position
-            graphics.translate(transform.getPosition().x, transform.getPosition().y);
+            graphics.translate(transform.getPositionX(), transform.getPositionY());
 
             // Rotate to entity rotation
             graphics.rotate(Math.toRadians(transform.getRotation()));
@@ -106,11 +112,13 @@ public class RenderSystem extends EngineSystem {
             graphics.rotate(-Math.toRadians(transform.getRotation()));
 
             // Reset translation
-            graphics.translate(-transform.getPosition().x, -transform.getPosition().y);
+            graphics.translate(-transform.getPositionX(), -transform.getPositionY());
         }
 
+        graphics.setColor(Color.BLACK);
+
         // Translate back from center of canvas
-        graphics.translate(-width / 2, -height / 2);
+        graphics.translate(-width, -height); //todo: is this necessary to continuously go back and fort to center? can't we just stay there?
     }
 }
 

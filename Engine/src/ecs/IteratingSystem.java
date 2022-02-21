@@ -10,15 +10,17 @@
  *******************************************************************************/
 package ecs;
 
+import logging.Logger;
+
 import java.util.List;
 
 /**
  * An engine system that processes a component family.
  */
-public abstract class IteratingSystem extends EngineSystem {
+public abstract class IteratingSystem extends System {
 
 	/** The family of components this system processes. */
-	private EntityFamily family;
+	private EntityFilter family;
 	
 	/** View to the currently present entities which match the family. */
 	private List<Entity> entities;
@@ -31,9 +33,10 @@ public abstract class IteratingSystem extends EngineSystem {
 	 * @throws NullPointerException
 	 *             in case the specified entity family is null
 	 */
-	public IteratingSystem(EntityFamily family) {
+	public IteratingSystem(EntityFilter family) {
 		if (family == null) {
-			throw new NullPointerException("entity family must not be null");
+			Logger.warn("Entity filter cannot be null");
+			throw new NullPointerException("entity filter must not be null");
 		}
 		this.family = family;
 	}

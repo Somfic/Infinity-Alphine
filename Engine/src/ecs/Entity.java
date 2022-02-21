@@ -10,6 +10,8 @@
  *******************************************************************************/
 package ecs;
 
+import logging.Logger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -166,6 +168,8 @@ public final class Entity {
                 return clazz.cast(c);
             }
         }
+
+        Logger.warn("No component of type " + clazz.getName() + " found for entity " + this.name);
         throw new IllegalArgumentException("component not found "
                 + clazz.getName());
     }
@@ -205,10 +209,12 @@ public final class Entity {
      */
     public void addComponent(Component c) {
         if (isActivated() || world != null) {
+            Logger.warn("Cannot add component to activated entity " + name);
             throw new IllegalStateException(
                     "cannot add component to activated entity");
         }
         if (c.getEntity() != null) {
+            Logger.warn("Component of type " + c.getClass().getSimpleName() + " already added to entity " + name);
             throw new IllegalArgumentException(
                     "component already attached an entity");
         }
@@ -236,6 +242,7 @@ public final class Entity {
      */
     void activate() {
         if (isActivated()) {
+            Logger.warn("Entity " + name + " is already activated");
             throw new IllegalStateException("entity already activated");
         }
 
@@ -255,6 +262,7 @@ public final class Entity {
      */
     void deactivate() {
         if (!isActivated()) {
+            Logger.warn("Entity " + name + " is not activated");
             throw new IllegalStateException("entity not activated");
         }
         

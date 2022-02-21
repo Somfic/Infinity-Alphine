@@ -11,10 +11,13 @@ public class Transform extends Component {
     private Vector2 scale;
     private double rotation;
 
+    private boolean isStatic;
+
     public Transform() {
         this.position = new Vector3(0, 0, 0);
         this.scale = new Vector2(1, 1);
         this.rotation = 0;
+        this.isStatic = false;
     }
 
     public Vector3 getPosition() {
@@ -25,6 +28,22 @@ public class Transform extends Component {
         this.position.x = x;
         this.position.y = y;
         this.position.z = z;
+
+        return this;
+    }
+
+    public Transform setPosition(double position, double z) {
+        this.position.x = position;
+        this.position.y = position;
+        this.position.z = z;
+
+        return this;
+    }
+
+    public Transform setPosition(double position) {
+        this.position.x = position;
+        this.position.y = position;
+        this.position.z = position;
 
         return this;
     }
@@ -70,6 +89,13 @@ public class Transform extends Component {
         return this;
     }
 
+    public Transform setScale(double scale) {
+        this.scale.x = scale;
+        this.scale.y = scale;
+
+        return this;
+    }
+
     public Transform setScaleX(double x) {
         this.scale.x = x;
 
@@ -96,6 +122,16 @@ public class Transform extends Component {
 
     public Transform setRotation(double degrees) {
         this.rotation = degrees;
+
+        return this;
+    }
+
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    public Transform setStatic(boolean isStatic) {
+        this.isStatic = isStatic;
 
         return this;
     }

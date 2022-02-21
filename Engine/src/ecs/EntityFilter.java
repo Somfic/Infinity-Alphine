@@ -44,7 +44,7 @@ import java.util.Set;
  * </pre>
  * 
  */
-public class EntityFamily {
+public class EntityFilter {
 
     /** The set of types an entity must contain as component. */
     private Set<Class<?>> types = new HashSet<>();
@@ -57,8 +57,8 @@ public class EntityFamily {
      *            member of this family
      * @return the new instance
      */
-    public static EntityFamily create(Class<?>... types) {
-        EntityFamily family = new EntityFamily();
+    public static EntityFilter create(Class<?>... types) {
+        EntityFilter family = new EntityFilter();
         for (Class<?> type : types) {
             family.types.add(type);
         }
@@ -69,7 +69,7 @@ public class EntityFamily {
      * The constructor is private in order to force the static factory method to
      * be used.
      */
-    private EntityFamily() {
+    private EntityFilter() {
         // intentionally left empty
     }
     
@@ -105,7 +105,7 @@ public class EntityFamily {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        EntityFamily other = (EntityFamily) obj;
+        EntityFilter other = (EntityFilter) obj;
         if (types == null) {
             if (other.types != null)
                 return false;

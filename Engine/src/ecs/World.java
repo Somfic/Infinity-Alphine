@@ -10,6 +10,8 @@
  *******************************************************************************/
 package ecs;
 
+import logging.Logger;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -69,19 +71,19 @@ public final class World {
     private List<Entity> entities = new ArrayList<>();
     
     /** A map for all the different views of the entities. */
-    private Map<EntityFamily, List<Entity>> views = new HashMap<>();
+    private Map<EntityFilter, List<Entity>> views = new HashMap<>();
     
     /** List of pending commands. */
     private List<Command> commands = new ArrayList<>();
     
     /** List of added systems. */
-    private List<EngineSystem> systems = new ArrayList<>();
+    private List<System> systems = new ArrayList<>();
 
     /** Registered entity listeners. */
     private List<EntityListener> listeners = new CopyOnWriteArrayList<EntityListener>();    
     
     /** Registered entity listeners listening only for certain entity families. */
-    private Map<EntityFamily, List<EntityListener>> filteredListeners = new HashMap<>();
+    private Map<EntityFilter, List<EntityListener>> filteredListeners = new HashMap<>();
     
     /** Indicates if an update cycle is currently in progress. */
     private boolean updating;
@@ -95,7 +97,7 @@ public final class World {
 	 * @param family
 	 *            the family of entities this listeners is interested in
 	 */
-    public void addEntityListener(EntityListener l, EntityFamily family) {
+    public void addEntityListener(EntityListener l, EntityFilter family) {
     	List<EntityListener> lst = filteredListeners.get(family);
     	if (lst == null) {
     		lst = new CopyOnWriteArrayList<>();
@@ -113,7 +115,7 @@ public final class World {
 	 * @param family
 	 *            the family of entities this listeners was interested in
      */
-    public void removeEntityListener(EntityListener l, EntityFamily family) {
+    public void removeEntityListener(EntityListener l, EntityFilter family) {
     	List<EntityListener> lst = filteredListeners.get(family);
     	if (lst != null) {
     		lst.remove(l);
@@ -192,6 +194,7 @@ public final class World {
      */
     private void addEntityInternal(Entity e) {
         if (e.getEngine() != null) {
+            Logger.warn("Entity of type " + e.getClass().getName() + " is already added to the world");
             throw new IllegalArgumentException(
                     "entity already added to an engine");
         }
@@ -210,7 +213,7 @@ public final class World {
             l.entityAdded(e);
         }
         
-        for (Entry<EntityFamily, List<EntityListener>> entry : filteredListeners.entrySet()) {
+        for (Entry<EntityFilter, List<EntityListener>> entry : filteredListeners.entrySet()) {
         	if (entry.getKey().isMember(e)) {
                 for (EntityListener l : entry.getValue()) { l.entityAdded(e); }
         	}
@@ -224,7 +227,7 @@ public final class World {
      *            the entity to be added
      */
     private void addEntityToViews(Entity e) {
-        for (EntityFamily family : views.keySet()) {
+        for (EntityFilter family : views.keySet()) {
             if (family.isMember(e)) {
                 views.get(family).add(e);
             }
@@ -250,7 +253,7 @@ public final class World {
         for (EntityListener l : listeners) {
             l.entityRemoved(e);
         }
-        for (Entry<EntityFamily, List<EntityListener>> entry : filteredListeners.entrySet()) {
+        for (Entry<EntityFilter, List<EntityListener>> entry : filteredListeners.entrySet()) {
         	if (entry.getKey().isMember(e)) {
                 for (EntityListener l : entry.getValue()) { l.entityRemoved(e); }
         	}
@@ -297,7 +300,7 @@ public final class World {
         updating = true;
         
         // update systems
-        for (EngineSystem s : systems) {
+        for (System s : systems) {
         	if (s.isEnabled()) {
                 s.onUpdate(dt);
         	}
@@ -327,7 +330,7 @@ public final class World {
      *            the entity family this requested list should show
      * @return the list of entities
      */
-    public List<Entity> getEntities(EntityFamily family) {
+    public List<Entity> getEntities(EntityFilter family) {
         List<Entity> view = views.get(family);
         if (view == null) {
             view = new ArrayList<>();
@@ -345,7 +348,7 @@ public final class World {
      * @param view
      *            the view that should be initialized
      */
-    private void initView(EntityFamily family, List<Entity> view) {
+    private void initView(EntityFilter family, List<Entity> view) {
         assert view.isEmpty();
         for (Entity e : entities) {
             if (family.isMember(e)) {
@@ -366,13 +369,15 @@ public final class World {
      * @throws IllegalArgumentException
      *             if the specified system has already been added
      */
-    public void addSystem(EngineSystem s) throws IllegalStateException,
+    public void addSystem(System s) throws IllegalStateException,
             IllegalArgumentException {
         if (updating) {
+            Logger.warn("Cannot add system during update cycle");
             throw new IllegalStateException("cannot add system while updating");
         }
         
         if (systems.contains(s)) {
+            Logger.warn("System of type " + s.getClass().getName() + " is already added to the world");
             throw new IllegalArgumentException("system already added");
         }
         
@@ -393,14 +398,16 @@ public final class World {
      * @throws IllegalArgumentException
      *             if the specified system in unknown
      */
-    public void removeSystem(EngineSystem s) throws IllegalStateException,
+    public void removeSystem(System s) throws IllegalStateException,
             IllegalArgumentException {
         if (updating) {
+            Logger.warn("Cannot remove system during update cycle");
             throw new IllegalStateException(
                     "cannot remove system while updating");
         }
         
         if (!systems.contains(s)) {
+            Logger.warn("System of type " + s.getClass().getName() + " is not added to the world");
             throw new IllegalArgumentException("system is unknown");
         }
         s.onExit(this);
@@ -418,7 +425,7 @@ public final class World {
      *         otherwise
      */
     public boolean hasSystem(Class<?> clazz) {
-        for (EngineSystem s : systems) {
+        for (System s : systems) {
             if (clazz.isInstance(s)) {
                 return true;
             }
@@ -439,12 +446,13 @@ public final class World {
      *             in case no suitable system could be found
      */
     public <T> T getSystem(Class<T> clazz) throws IllegalArgumentException {
-        for (EngineSystem s : systems) {
+        for (System s : systems) {
             if (clazz.isInstance(s)) {
                 return clazz.cast(s);
             }
         }
-        
+
+        Logger.warn("No system of type " + clazz.getName() + " could be found");
         throw new IllegalArgumentException("system not found "
                 + clazz.getName());
     }
@@ -464,6 +472,7 @@ public final class World {
      */
     public void dispose() throws IllegalStateException {
         if (updating) {
+            Logger.warn("Cannot dispose during an update cycle");
             throw new IllegalStateException("dispose not allowed during update");
         }
         
@@ -479,7 +488,7 @@ public final class World {
 
         // dispose systems
         for (int i = systems.size() - 1; i >= 0; --i) {
-            EngineSystem s = systems.get(i);
+            System s = systems.get(i);
             s.setEnabled(false);
             s.onExit(this);
             s.setEngine(null);
@@ -506,7 +515,7 @@ public final class World {
      *             in case the specified index is {@code<} 0 or {@code>=} number
      *             of registered systems
      */
-    public EngineSystem getSystem(int idx) throws IndexOutOfBoundsException {
+    public System getSystem(int idx) throws IndexOutOfBoundsException {
         return systems.get(idx);
     }
     
@@ -518,8 +527,18 @@ public final class World {
     public int getNumOfEntities() {
         return entities.size();
     }
-    
-    
+
+    private boolean debug;
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    public boolean isDebug() {
+        return this.debug;
+    }
+
+
     /////////////////////////////////////////////////
     /////// Inner classes and interfaces
     /////////////////////////////////////////////////
