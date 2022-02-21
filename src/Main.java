@@ -5,8 +5,6 @@ import ecs.Entity;
 import ecs.worlds.World;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.stage.Stage;
 import logging.Logger;
@@ -14,8 +12,6 @@ import systems.CanvasSystem;
 import systems.RenderSystem;
 
 import java.awt.*;
-
-import static javafx.application.Application.launch;
 
 public class Main extends Application {
 
@@ -30,14 +26,18 @@ public class Main extends Application {
         Canvas canvas = new Canvas(800, 600);
 
         World world = new World();
-        world.addSystem(new CanvasSystem(stage, canvas, false));
+        world.addSystem(new CanvasSystem(stage, canvas));
         world.addSystem(new RenderSystem(canvas));
 
-        entity = world.createEntity("Test");
-        entity.addComponent(new Transform().setScale(10, 10));
-        entity.addComponent(new FlatMaterial().setFillColor(Color.RED));
-        entity.addComponent(new Shape(Shape.PrimitiveShape.CIRCLE));
-        entity.addScript(new TestScript());
+        for (int i = 0; i < 100000; i++) {
+            entity = world.createEntity("Test");
+
+            // Random position
+            entity.addComponent(new Transform().setScale(10, 10).setPosition(Math.random() * 1000 - 500, Math.random() * 800 - 400, 0).setRotation(Math.random() * 360));
+            entity.addComponent(new FlatMaterial().setFillColor(Color.getHSBColor((float)Math.random(), (float)Math.random(), (float)Math.random())).setFilled(true));
+            entity.addComponent(new Shape(Shape.PrimitiveShape.RECTANGLE));
+            //entity.addScript(new TestScript());
+        }
 
         world.start();
 

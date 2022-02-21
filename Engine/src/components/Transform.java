@@ -1,23 +1,23 @@
 package components;
 
-import com.sun.javafx.geom.Vec2d;
-import com.sun.javafx.geom.Vec3d;
 import ecs.components.Component;
+import org.dyn4j.geometry.Vector2;
+import org.dyn4j.geometry.Vector3;
 
 import java.awt.font.TransformAttribute;
 
 public class Transform implements Component {
-    private Vec3d position;
-    private Vec2d scale;
+    private Vector3 position;
+    private Vector2 scale;
     private double rotation;
 
     public Transform() {
-        this.position = new Vec3d(0, 0, 0);
-        this.scale = new Vec2d(1, 1);
+        this.position = new Vector3(0, 0, 0);
+        this.scale = new Vector2(1, 1);
         this.rotation = 0;
     }
 
-    public Vec3d getPosition() {
+    public Vector3 getPosition() {
         return position;
     }
 
@@ -59,7 +59,7 @@ public class Transform implements Component {
         return this.position.z;
     }
 
-    public Vec2d getScale() {
+    public Vector2 getScale() {
         return scale;
     }
 
