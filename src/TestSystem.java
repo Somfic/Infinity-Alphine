@@ -7,6 +7,7 @@ import ecs.World;
 
 import java.awt.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class TestSystem extends System {
@@ -25,16 +26,13 @@ public class TestSystem extends System {
         started = LocalDateTime.now();
     }
 
-    long counter = 0;
+    int count = 0;
 
     @Override
     public void onUpdate(double dt) {
-        if (LocalDateTime.now().isBefore(started.plusSeconds(5))) {
-            return;
-        }
-
-        for (int i = 0; i < dt * 10000; i++) {
-            counter++;
+        for (int i = 0; i < dt * 1000; i++) {
+            if(count > 1000)
+                return;
 
             Entity entity = new Entity("Henlo");
 
@@ -43,10 +41,11 @@ public class TestSystem extends System {
             entity.addComponent(new FlatMaterial().setFillColor(Color.getHSBColor((float) Math.random(), (float) Math.random(),1f)).setFilled(false));
             entity.addComponent(new components.Shape(Shape.PrimitiveShape.RECTANGLE));
 
+            count++;
             getWorld().addEntity(entity);
         }
 
         // Update the counter
-        objectCounter.getComponent(components.Text.class).setText(String.format(Locale.ENGLISH, "%,d", counter) + " objects");
+        objectCounter.getComponent(components.Text.class).setText(String.format(Locale.ENGLISH, "%,d", count) + " objects");
     }
 }

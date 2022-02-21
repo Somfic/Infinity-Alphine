@@ -43,7 +43,7 @@ public class Main extends Application {
         AnimationTimer timer = new AnimationTimer() {
             long last = -1;
 
-            final double smoothing = 0.9f;
+            final double smoothing = 0.99f;
 
             double averageFps = -1f;
             double averageDelta = -1f;
