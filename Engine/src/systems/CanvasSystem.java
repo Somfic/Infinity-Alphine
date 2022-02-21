@@ -1,6 +1,7 @@
 package systems;
 
-import ecs.systems.System;
+import ecs.World;
+import ecs.EngineSystem;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -13,29 +14,25 @@ import logging.LogLevel;
 import logging.LogListener;
 import logging.Logger;
 
-public class CanvasSystem extends System implements LogListener {
+
+public class CanvasSystem extends EngineSystem implements LogListener {
 
     private final Stage stage;
     private final Canvas canvas;
     private final boolean isDebug;
     private TextArea consoleArea;
 
-    public CanvasSystem(Stage stage, Canvas canvas) {
-        this.stage = stage;
-        this.canvas = canvas;
-        this.isDebug = false;
-    }
-
     public CanvasSystem(Stage stage, Canvas canvas, boolean isDebug) {
+        super();
         this.stage = stage;
         this.canvas = canvas;
         this.isDebug = isDebug;
     }
 
     @Override
-    public void onStart() {
+    public void onStart(World e) {
         if(!this.isDebug) {
-            Logger.debug("Creating release mode canvas");
+            logging.Logger.debug("Creating release mode canvas");
 
             // Resize
             this.stage.widthProperty().addListener((observable, oldValue, newValue) -> this.canvas.setWidth(newValue.doubleValue()));
@@ -45,7 +42,7 @@ public class CanvasSystem extends System implements LogListener {
             this.stage.setScene(scene);
 
         } else {
-            Logger.debug("Creating debug mode canvas");
+            logging.Logger.debug("Creating debug mode canvas");
 
             // Main pane
             BorderPane mainPane = new BorderPane();

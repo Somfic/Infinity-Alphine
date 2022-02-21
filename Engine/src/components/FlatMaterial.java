@@ -1,10 +1,10 @@
 package components;
 
-import ecs.components.Component;
+import ecs.Component;
 
 import java.awt.*;
 
-public class FlatMaterial implements Component {
+public class FlatMaterial extends Component {
 
     private Color fillColor;
     private Color strokeColor;

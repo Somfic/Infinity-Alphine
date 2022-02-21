@@ -3,28 +3,35 @@ package systems;
 import components.FlatMaterial;
 import components.Shape;
 import components.Transform;
+import ecs.World;
+import ecs.EngineSystem;
 import ecs.Entity;
-import ecs.systems.System;
+import ecs.EntityFamily;
 import javafx.scene.canvas.Canvas;
 import logging.Logger;
 import org.jfree.fx.FXGraphics2D;
 
-public class RenderSystem extends System {
+import java.util.List;
+
+public class RenderSystem extends EngineSystem {
     private final Canvas canvas;
     private FXGraphics2D graphics;
 
+    private EntityFamily filter;
+
     public RenderSystem(Canvas canvas) {
         this.canvas = canvas;
+        this.filter = EntityFamily.create(Transform.class, Shape.class, FlatMaterial.class);
     }
 
     @Override
-    public void onStart() {
+    public void onStart(World e) {
         graphics = new FXGraphics2D(canvas.getGraphicsContext2D());
     }
 
     @Override
-    public void onRender() {
-        Entity[] entities = this.getEntities(Transform.class, Shape.class, FlatMaterial.class);
+    public void onUpdate(double dt) {
+        List<Entity> entities = getEngine().getEntities(this.filter);
 
         int width = (int)Math.ceil(canvas.getWidth());
         int height = (int)Math.ceil(canvas.getHeight());
@@ -104,11 +111,6 @@ public class RenderSystem extends System {
 
         // Translate back from center of canvas
         graphics.translate(-width / 2, -height / 2);
-    }
-
-    @Override
-    public void onEnd() {
-
     }
 }
 

@@ -1,8 +1,8 @@
 package components;
 
-import ecs.components.Component;
+import ecs.Component;
 
-public class Shape implements Component {
+public class Shape extends Component {
     private PrimitiveShape shape;
 
     public Shape(PrimitiveShape shape) {

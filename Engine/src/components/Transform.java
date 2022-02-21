@@ -1,12 +1,12 @@
 package components;
 
-import ecs.components.Component;
+import ecs.Component;
 import org.dyn4j.geometry.Vector2;
 import org.dyn4j.geometry.Vector3;
 
 import java.awt.font.TransformAttribute;
 
-public class Transform implements Component {
+public class Transform extends Component {
     private Vector3 position;
     private Vector2 scale;
     private double rotation;

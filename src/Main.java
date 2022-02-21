@@ -2,7 +2,7 @@ import components.FlatMaterial;
 import components.Shape;
 import components.Transform;
 import ecs.Entity;
-import ecs.worlds.World;
+import ecs.World;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.canvas.Canvas;
@@ -26,20 +26,20 @@ public class Main extends Application {
         Canvas canvas = new Canvas(800, 600);
 
         World world = new World();
-        world.addSystem(new CanvasSystem(stage, canvas));
+        world.addSystem(new CanvasSystem(stage, canvas, false));
         world.addSystem(new RenderSystem(canvas));
 
         for (int i = 0; i < 100000; i++) {
-            entity = world.createEntity("Test");
+            Entity entity = new Entity("Henlo");
 
             // Random position
             entity.addComponent(new Transform().setScale(10, 10).setPosition(Math.random() * 1000 - 500, Math.random() * 800 - 400, 0).setRotation(Math.random() * 360));
             entity.addComponent(new FlatMaterial().setFillColor(Color.getHSBColor((float)Math.random(), (float)Math.random(), (float)Math.random())).setFilled(true));
             entity.addComponent(new Shape(Shape.PrimitiveShape.RECTANGLE));
             //entity.addScript(new TestScript());
-        }
 
-        world.start();
+            world.addEntity(entity);
+        }
 
         AnimationTimer timer = new AnimationTimer() {
             long last = -1;
@@ -58,7 +58,6 @@ public class Main extends Application {
                 double delta = (now - last) / 1e9;
 
                 world.update(delta);
-                world.render();
 
                 // FPS counter
                 if(now - lastFramerate > 1e9) {
@@ -76,7 +75,7 @@ public class Main extends Application {
 
         stage.setOnCloseRequest(e -> {
             timer.stop();
-            world.end();
+            world.dispose();
         });
     }
 }
