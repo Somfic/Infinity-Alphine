@@ -32,12 +32,21 @@ public class CanvasSystem extends System implements LogListener {
         if(e.isDebug()) {
             logging.Logger.debug("Creating release mode canvas");
 
-            // Resize
-            this.stage.widthProperty().addListener((observable, oldValue, newValue) -> this.canvas.setWidth(newValue.doubleValue()));
-            this.stage.heightProperty().addListener((observable, oldValue, newValue) -> this.canvas.setHeight(newValue.doubleValue()));
-
             Scene scene = new Scene(new Group(canvas));
+
             this.stage.setScene(scene);
+            this.stage.show();
+
+            double windowDeltaHeight = stage.getHeight() - scene.getHeight();
+            double windowDeltaWidth = stage.getWidth() - scene.getWidth();
+
+            Logger.debug("Stage size: " + stage.getWidth() + "x" + stage.getHeight());
+            Logger.debug("Scene size: " + scene.getWidth() + "x" + scene.getHeight());
+            Logger.debug("Window delta: " + windowDeltaWidth + "x" + windowDeltaHeight);
+
+            // Resize
+            this.stage.widthProperty().addListener((observable, oldValue, newValue) -> this.canvas.setWidth(newValue.doubleValue() - windowDeltaWidth));
+            this.stage.heightProperty().addListener((observable, oldValue, newValue) -> this.canvas.setHeight(newValue.doubleValue() - windowDeltaHeight));
 
         } else {
             logging.Logger.debug("Creating debug mode canvas");
@@ -81,9 +90,9 @@ public class CanvasSystem extends System implements LogListener {
             this.stage.setScene(scene);
 
             Logger.addListener(this);
-        }
 
-        this.stage.show();
+            this.stage.show();
+        }
     }
 
     @Override

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Engine/Engine.iml" filepath="$PROJECT_DIR$/Engine/Engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Infinity-Alphine/Infinity-Alphine.iml" filepath="$PROJECT_DIR$/Infinity-Alphine/Infinity-Alphine.iml" />
       <module fileurl="file://$PROJECT_DIR$/Stars.iml" filepath="$PROJECT_DIR$/Stars.iml" />
     </modules>
   </component>
