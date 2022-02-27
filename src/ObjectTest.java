@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class TestSystem extends System {
+public class ObjectTest extends System {
 
     Entity objectCounter;
 
@@ -20,7 +20,7 @@ public class TestSystem extends System {
     public void onStart(World e) {
         objectCounter = new Entity("ObjectCounter");
         objectCounter.addComponent(new components.Text().setColor(Color.cyan));
-        objectCounter.addComponent(new Transform().setPosition(10, 35, 0).setStatic(true));
+        objectCounter.addComponent(new Transform().setPosition(10, 35).setStatic(true));
         getWorld().addEntity(objectCounter);
 
         started = LocalDateTime.now();
@@ -37,7 +37,7 @@ public class TestSystem extends System {
             Entity entity = new Entity("Henlo");
 
             // Random position
-            entity.addComponent(new Transform().setScale(Math.random() * 10, Math.random() * 10).setPosition(Math.random() * 500 - 250, Math.random() * 500 - 250, 0).setRotation(Math.random() * 360));
+            entity.addComponent(new Transform().setScale(Math.random() * 10, Math.random() * 10).setPosition(Math.random() * 500 - 250, Math.random() * 500 - 250).setRotation(Math.random() * 360));
             entity.addComponent(new FlatMaterial().setFillColor(Color.getHSBColor((float) Math.random(), (float) Math.random(),1f)).setFilled(false));
             entity.addComponent(new components.Shape(Shape.PrimitiveShape.RECTANGLE));
 

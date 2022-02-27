@@ -7,35 +7,25 @@ import org.dyn4j.geometry.Vector3;
 import java.awt.font.TransformAttribute;
 
 public class Transform extends Component {
-    private Vector3 position;
-    private Vector2 scale;
-    private double rotation;
+    private Vector2 position = new Vector2(0, 0);
+    private Vector2 scale = new Vector2(1, 1);
+    private int z = 0;
+    private double rotation = 0;
+    private boolean isStatic = false;
 
-    private boolean isStatic;
-
-    public Transform() {
-        this.position = new Vector3(0, 0, 0);
-        this.scale = new Vector2(1, 1);
-        this.rotation = 0;
-        this.isStatic = false;
-    }
-
-    public Vector3 getPosition() {
+    public Vector2 getPosition() {
         return position;
     }
 
-    public Transform setPosition(double x, double y, double z) {
+    public Transform setPosition(double x, double y) {
         this.position.x = x;
         this.position.y = y;
-        this.position.z = z;
 
         return this;
     }
 
-    public Transform setPosition(double position, double z) {
-        this.position.x = position;
-        this.position.y = position;
-        this.position.z = z;
+    public Transform setPosition(Vector2 position) {
+        this.position = position;
 
         return this;
     }
@@ -43,7 +33,6 @@ public class Transform extends Component {
     public Transform setPosition(double position) {
         this.position.x = position;
         this.position.y = position;
-        this.position.z = position;
 
         return this;
     }
@@ -60,8 +49,8 @@ public class Transform extends Component {
         return this;
     }
 
-    public Transform setPositionZ(double z) {
-        this.position.z = z;
+    public Transform setZIndex(int z) {
+        this.z = z;
 
         return this;
     }
@@ -74,12 +63,14 @@ public class Transform extends Component {
         return this.position.y;
     }
 
-    public double getPositionZ() {
-        return this.position.z;
-    }
-
     public Vector2 getScale() {
         return scale;
+    }
+
+    public Transform setScale(Vector2 scale) {
+        this.scale = scale;
+
+        return this;
     }
 
     public Transform setScale(double x, double y) {

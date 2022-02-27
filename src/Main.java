@@ -6,11 +6,11 @@ import ecs.Entity;
 import ecs.World;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.stage.Stage;
-import systems.CanvasSystem;
-import systems.RenderSystem;
-import systems.TextSystem;
+import systems.*;
 
 import java.awt.*;
 import java.util.Locale;
@@ -26,17 +26,21 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Canvas canvas = new Canvas(800, 600);
+        Scene scene = new Scene(new Group(canvas));
 
         World world = new World();
         world.setDebug(true);
 
-        world.addSystem(new CanvasSystem(stage, canvas));
+        world.addSystem(new CanvasSystem(stage, scene, canvas));
         world.addSystem(new RenderSystem(canvas));
         world.addSystem(new TextSystem(canvas));
-        world.addSystem(new TestSystem());
+        world.addSystem(new InputSystem(scene));
+        world.addSystem(new MotionSystem());
+
+        world.addSystem(new MotionTestSystem());
 
         this.fpsCounter = new Entity("FPS Counter");
-        fpsCounter.addComponent(new Transform().setStatic(true).setPosition(10, 20, 0));
+        fpsCounter.addComponent(new Transform().setStatic(true).setPosition(10, 20));
         fpsCounter.addComponent(new Text().setColor(Color.RED));
         world.addEntity(fpsCounter);
 
@@ -76,8 +80,6 @@ public class Main extends Application {
                 double health = Math.min((averageFps - 10f) / (60f - 10f), 1f);
                 float hue = (float) (health * 0.3f);
                 fpsCounter.getComponent(Text.class).setColor(Color.getHSBColor(hue, 1f, 1f));
-
-
                 fpsCounter.getComponent(Text.class).setText(String.format(Locale.ENGLISH, "%.0f", averageFps) + "fps | " + String.format(Locale.ENGLISH, "%.2f", averageDelta) + "ms");
 
                 last = now;
