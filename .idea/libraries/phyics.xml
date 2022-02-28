@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="phyics">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/Infinity-Alphine/lib/phyics" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/Infinity-Alphine/lib/phyics" recursive="false" />
+  </library>
+</component>

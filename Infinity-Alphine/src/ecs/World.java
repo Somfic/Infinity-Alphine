@@ -314,6 +314,46 @@ public final class World {
         
         updating = false;
     }
+
+    public void render() {
+        assert updating == false;
+        updating = true;
+
+        // render systems
+        for (System s : systems) {
+            if (s.isEnabled()) {
+                s.onRender();
+            }
+        }
+
+        // execute pending commands
+        for (Command cmd : commands) {
+            cmd.execute();
+        }
+        commands.clear();
+
+        updating = false;
+    }
+
+    public void fixedUpdate(double dt) {
+        assert updating == false;
+        updating = true;
+
+        // update systems
+        for (System s : systems) {
+            if (s.isEnabled()) {
+               s.onFixedUpdate(dt);
+            }
+        }
+
+        // execute pending commands
+        for (Command cmd : commands) {
+            cmd.execute();
+        }
+        commands.clear();
+
+        updating = false;
+    }
     
     /**
      * Returns a list that will contain only entities which are members of the

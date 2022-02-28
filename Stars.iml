@@ -11,5 +11,6 @@
     <orderEntry type="module" module-name="Infinity-Alphine" />
     <orderEntry type="library" name="lib (2)" level="application" />
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="phyics" level="project" />
   </component>
 </module>

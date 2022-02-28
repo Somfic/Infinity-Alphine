@@ -1,4 +1,5 @@
 import components.FlatMaterial;
+import components.RigidBody;
 import components.Shape;
 import components.Transform;
 import ecs.Entity;
@@ -24,22 +25,35 @@ public class ObjectTest extends System {
         getWorld().addEntity(objectCounter);
 
         started = LocalDateTime.now();
+
+        start = LocalDateTime.now();
     }
+
+    LocalDateTime start;
+
+
 
     int count = 0;
 
     @Override
     public void onUpdate(double dt) {
-        for (int i = 0; i < dt * 1000; i++) {
-            if(count > 1000)
+        if(LocalDateTime.now().isBefore(start.plusSeconds(5))) {
+            return;
+        }
+
+        for (int i = 0; i < dt * 2; i++) {
+            if(count > 500)
                 return;
 
             Entity entity = new Entity("Henlo");
 
+            float size = (float) Math.random() * 30 + 10;
+
             // Random position
-            entity.addComponent(new Transform().setScale(Math.random() * 10, Math.random() * 10).setPosition(Math.random() * 500 - 250, Math.random() * 500 - 250).setRotation(Math.random() * 360));
-            entity.addComponent(new FlatMaterial().setFillColor(Color.getHSBColor((float) Math.random(), (float) Math.random(),1f)).setFilled(false));
-            entity.addComponent(new components.Shape(Shape.PrimitiveShape.RECTANGLE));
+            entity.addComponent(new FlatMaterial().setFillColor(Color.getHSBColor((float) Math.random(), (float) Math.random(),1f)).setFilled(true));
+            entity.addComponent(new Transform().setScale(size).setPosition(Math.random() * 2000 - 1000, Math.random() * 2000 - 1000).setRotation(Math.random() * 360));
+            entity.addComponent(new Shape().setShape(Shape.PrimitiveShape.CIRCLE));
+            entity.addComponent(new RigidBody().setMass(200, 1));
 
             count++;
             getWorld().addEntity(entity);

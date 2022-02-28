@@ -107,6 +107,20 @@ public abstract class System {
      *            the delta time in seconds
      */
     public void onUpdate(double dt) { }
+
+    /**
+     * Called by the engine when the engines fixed update method is invoked. In
+     * general this method will be called once each game loop cycle.
+     * @param dt
+     *            the delta time in seconds
+     */
+    public void onFixedUpdate(double dt) { }
+
+    /**
+     * Called by the engine when the engines render method is invoked.
+     * This method will be called once each frame.
+     */
+    public void onRender() { }
     
     /** 
      * Called when the enabled state of this system has changed.

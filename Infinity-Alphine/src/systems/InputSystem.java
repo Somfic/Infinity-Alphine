@@ -48,7 +48,6 @@ public class InputSystem extends System {
     public void onUpdate(double dt) {
         if(keyPressedEvent != null) {
             // todo: add shift and other modifiers
-            Logger.debug("Key pressed: " + keyPressedEvent.getCode());
             keyPressedEvent = null;
         }
 
@@ -74,7 +73,6 @@ public class InputSystem extends System {
 
         if(scrollEvent != null) {
             InputManager.getInstance().setMouseScroll(new Vector2(scrollEvent.getDeltaX(), scrollEvent.getDeltaY()));
-            Logger.debug("Mouse scroll: " + scrollEvent.getDeltaY());
             scrollEvent = null;
         }
 

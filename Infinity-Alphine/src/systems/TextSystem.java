@@ -29,7 +29,7 @@ public class TextSystem extends System {
     }
 
     @Override
-    public void onUpdate(double dt) {
+    public void onRender() {
         List<Entity> entities = getWorld().getEntities(filter);
 
         int width = (int)Math.ceil(canvas.getWidth() / 2);
@@ -41,6 +41,9 @@ public class TextSystem extends System {
         for (Entity entity : entities) {
             Transform transform = entity.getComponent(Transform.class);
             Text text = entity.getComponent(Text.class);
+
+            int tx = (int)Math.ceil(transform.getPositionX());
+            int ty = (int)Math.ceil(transform.getPositionY());
 
             // Translate to entity position
             graphics.translate(transform.getPositionX(), transform.getPositionY());

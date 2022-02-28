@@ -20,6 +20,8 @@ public class RenderSystem extends System {
 
     private final EntityFilter filter;
 
+    private final double pixelScale = 100;
+
     public RenderSystem(Canvas canvas) {
         this.canvas = canvas;
         this.filter = EntityFilter.create(Transform.class, Shape.class, FlatMaterial.class);
@@ -28,22 +30,23 @@ public class RenderSystem extends System {
     @Override
     public void onStart(World e) {
         graphics = new FXGraphics2D(canvas.getGraphicsContext2D());
+        graphics.scale(1f / pixelScale, 1f / pixelScale);
     }
 
     @Override
     public void onUpdate(double dt) {
         List<Entity> entities = getWorld().getEntities(this.filter);
 
-        int width = (int)Math.ceil(canvas.getWidth());
-        int height = (int)Math.ceil(canvas.getHeight());
+        int width = (int)Math.ceil(canvas.getWidth() * pixelScale);
+        int height = (int)Math.ceil(canvas.getHeight() * pixelScale);
 
         // todo: move this somewhere else? potential issue if this is done in the wrong order...
         // Clear the canvas
         graphics.setColor(Color.BLACK);
         graphics.clearRect(0, 0, width, height);
 
-        width = (int)Math.ceil(canvas.getWidth() / 2);
-        height = (int)Math.ceil(canvas.getHeight() / 2);
+        width = (int)Math.ceil(canvas.getWidth() / 2f * pixelScale);
+        height = (int)Math.ceil(canvas.getHeight() / 2f * pixelScale);
 
         // Translate to center of canvas
         graphics.translate(width, height);
@@ -54,10 +57,13 @@ public class RenderSystem extends System {
             FlatMaterial material = entity.getComponent(FlatMaterial.class);
 
             // Translate to entity position
-            graphics.translate(transform.getPositionX(), transform.getPositionY());
+            // Round on two decimal places to avoid floating point errors
+            int tx = (int)Math.round(transform.getPositionX() * pixelScale);
+            int ty = (int)Math.round(transform.getPositionY() * pixelScale);
+            int tr = (int)Math.toRadians(Math.round(transform.getRotation()));
 
-            // Rotate to entity rotation
-            graphics.rotate(Math.toRadians(transform.getRotation()));
+            graphics.translate(tx, ty);
+            graphics.rotate(tr);
 
             // Set color
             graphics.setColor(material.getFillColor());
@@ -65,10 +71,10 @@ public class RenderSystem extends System {
 
             switch (shape.getShape()) {
                 case CIRCLE: {
-                    int rx = (int) Math.round(transform.getScaleX());
-                    int ry = (int) Math.round(transform.getScaleY());
-                    int x = (int) Math.round(transform.getScaleX() / -2.0);
-                    int y = (int) Math.round(transform.getScaleX() / -2.0);
+                    int rx = (int) Math.round(transform.getScaleX() * pixelScale);
+                    int ry = (int) Math.round(transform.getScaleY() * pixelScale);
+                    int x = (int) Math.round(transform.getScaleX() / -2 * pixelScale);
+                    int y = (int) Math.round(transform.getScaleX() / -2 * pixelScale);
 
                     if (material.isFilled())
                         graphics.fillOval(Math.round(x), Math.round(y), Math.round(rx), Math.round(ry));
@@ -78,10 +84,10 @@ public class RenderSystem extends System {
                 }
 
                 case RECTANGLE: {
-                    int w = (int) Math.round(transform.getScaleX());
-                    int h = (int) Math.round(transform.getScaleY());
-                    int x = (int) Math.round(transform.getScaleX() / 2.0);
-                    int y = (int) Math.round(transform.getScaleY() / 2.0);
+                    int w = (int) Math.round(transform.getScaleX() * pixelScale);
+                    int h = (int) Math.round(transform.getScaleY() * pixelScale);
+                    int x = (int) Math.round(transform.getScaleX() * -pixelScale);
+                    int y = (int) Math.round(transform.getScaleY() * -pixelScale);
 
                     if (material.isFilled())
                         graphics.fillRect(x, y, w, h);
@@ -91,10 +97,10 @@ public class RenderSystem extends System {
                 }
 
                 case TRIANGLE: {
-                    int w = (int) Math.round(transform.getScaleX());
-                    int h = (int) Math.round(transform.getScaleY());
-                    int x = (int) Math.round(transform.getScaleX() / 2.0);
-                    int y = (int) Math.round(transform.getScaleY() / 2.0);
+                    int w = (int) Math.round(transform.getScaleX() * pixelScale);
+                    int h = (int) Math.round(transform.getScaleY() * pixelScale);
+                    int x = (int) Math.round(transform.getScaleX() * -pixelScale);
+                    int y = (int) Math.round(transform.getScaleY() * -pixelScale);
 
                     if (material.isFilled())
                         graphics.fillPolygon(new int[]{x, x + w, x + w / 2}, new int[]{y, y + h, y + h / 2}, 3);
@@ -108,17 +114,13 @@ public class RenderSystem extends System {
                     break;
             }
 
-            // Reset rotation
-            graphics.rotate(-Math.toRadians(transform.getRotation()));
-
-            // Reset translation
-            graphics.translate(-transform.getPositionX(), -transform.getPositionY());
+            graphics.translate(-tx, -ty);
+            graphics.rotate(-tr);
         }
 
-        graphics.setColor(Color.BLACK);
+        graphics.translate(-width, -height);
 
-        // Translate back from center of canvas
-        graphics.translate(-width, -height); //todo: is this necessary to continuously go back and fort to center? can't we just stay there?
+        graphics.setColor(Color.BLACK);
     }
 }
 

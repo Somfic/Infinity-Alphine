@@ -3,18 +3,16 @@ package components;
 import ecs.Component;
 
 public class Shape extends Component {
-    private PrimitiveShape shape;
-
-    public Shape(PrimitiveShape shape) {
-        this.shape = shape;
-    }
+    private PrimitiveShape shape = PrimitiveShape.RECTANGLE;
 
     public PrimitiveShape getShape() {
         return shape;
     }
 
-    public void setShape(PrimitiveShape shape) {
+    public Shape setShape(PrimitiveShape shape) {
         this.shape = shape;
+
+        return this;
     }
 
    public enum PrimitiveShape {
