@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="javafx">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/Infinity-Alphine/lib/javafx" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/Infinity-Alphine/lib/javafx" recursive="false" />
+  </library>
+</component>
