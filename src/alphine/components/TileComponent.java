@@ -7,11 +7,7 @@ public class TileComponent extends Component {
 
     private int tileSetX;
     private int tileSetY;
-    private final TileSet tileSet;
-
-    public TileComponent(TileSet tileSet) {
-        this.tileSet = tileSet;
-    }
+    private TileSet tileSet;
 
     public TileComponent setXY(int tileSetX, int tileSetY) {
         this.tileSetX = tileSetX;
@@ -29,6 +25,11 @@ public class TileComponent extends Component {
 
     public Texture getTexture() {
         return tileSet.getTexture(tileSetX, tileSetY);
+    }
+
+    public TileComponent setTileSet(TileSet tileSet) {
+        this.tileSet = tileSet;
+        return this;
     }
 
     public TileSet getTileSet() {
