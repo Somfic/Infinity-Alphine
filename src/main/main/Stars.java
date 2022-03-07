@@ -1,6 +1,8 @@
 import alphine.ecs.World;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
@@ -20,17 +22,19 @@ public class Stars extends Application {
 
     public void run(Stage stage) {
         Canvas canvas = new Canvas(600, 600);
+        Scene scene = new Scene(new Group(canvas));
 
         GraphicsContext graphics = canvas.getGraphicsContext2D();
 
         World world = new World();
         world.setDebug(false);
 
-        world.addSystem(new WindowSystem(stage, canvas));
+        world.addSystem(new WindowSystem(stage, scene, canvas));
         world.addSystem(new IsometricRenderSystem(canvas));
         world.addSystem(new UiSystem());
         world.addSystem(new TestSystem());
         world.addSystem(new FpsSystem());
+        world.addSystem(new CameraSystem(scene));
 
         world.start();
 
@@ -51,7 +55,7 @@ public class Stars extends Application {
                 double dt = (now - last) / 1e9;
                 last = now;
 
-                world.fixedUpdate(dt, 1f / 60f);
+                world.fixedUpdate(dt, 1f / 50f);
                 world.update(dt);
                 world.render(graphics);
             }
