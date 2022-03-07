@@ -18,13 +18,15 @@ import alphine.logging.Logger;
 public class WindowSystem extends System implements LogListener {
 
     private final Stage stage;
+    private Scene scene;
     private final Canvas canvas;
 
     private TextArea consoleArea;
 
-    public WindowSystem(Stage stage, Canvas canvas) {
+    public WindowSystem(Stage stage, Scene scene, Canvas canvas) {
         super();
         this.stage = stage;
+        this.scene = scene;
         this.canvas = canvas;
     }
 
@@ -32,7 +34,7 @@ public class WindowSystem extends System implements LogListener {
     public void onStart() {
         if(!getWorld().isDebug()) {
             alphine.logging.Logger.debug("Creating release mode canvas");
-            Scene scene = new Scene(new Group(canvas));
+
 
             this.stage.setScene(scene);
             this.stage.show();
