@@ -22,8 +22,6 @@ public class UiSystem extends System {
         List<Entity> entities = getEntities(filter);
 
         for (Entity entity : entities) {
-            Logger.debug("Rendering entity");
-
             TransformComponent transform = entity.getComponent(TransformComponent.class);
             TextComponent text = entity.getComponent(TextComponent.class);
             MaterialComponent material = entity.getComponent(MaterialComponent.class);
