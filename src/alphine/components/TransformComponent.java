@@ -2,15 +2,16 @@ package alphine.components;
 
 import alphine.ecs.Component;
 import org.dyn4j.geometry.Vector2;
+import org.dyn4j.geometry.Vector3;
 
 public class TransformComponent extends Component {
-    private Vector2 position = new Vector2(0, 0);
+    private Vector3 position = new Vector3(0, 0, 0);
     private Vector2 scale = new Vector2(1, 1);
     private int z = 0;
     private double rotation = 0;
     private boolean isStatic = false;
 
-    public Vector2 getPosition() {
+    public Vector3 getPosition() {
         return position;
     }
 
@@ -21,7 +22,15 @@ public class TransformComponent extends Component {
         return this;
     }
 
-    public TransformComponent setPosition(Vector2 position) {
+    public TransformComponent setPosition(double x, double y, double z) {
+        this.position.x = x;
+        this.position.y = y;
+        this.position.z = z;
+
+        return this;
+    }
+
+    public TransformComponent setPosition(Vector3 position) {
         this.position = position;
 
         return this;
@@ -30,6 +39,7 @@ public class TransformComponent extends Component {
     public TransformComponent setPosition(double position) {
         this.position.x = position;
         this.position.y = position;
+        this.position.z = 0;
 
         return this;
     }
@@ -46,11 +56,12 @@ public class TransformComponent extends Component {
         return this;
     }
 
-    public TransformComponent setZIndex(int z) {
-        this.z = z;
+    public TransformComponent setPositionZ(double z) {
+        this.position.z = z;
 
         return this;
     }
+
 
     public double getPositionX() {
         return this.position.x;
@@ -58,6 +69,10 @@ public class TransformComponent extends Component {
 
     public double getPositionY() {
         return this.position.y;
+    }
+
+    public double getPositionZ() {
+        return this.position.z;
     }
 
     public Vector2 getScale() {

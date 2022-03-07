@@ -35,3 +35,4 @@ public class MaterialComponent extends Component {
         return strokeWidth;
     }
 }
+

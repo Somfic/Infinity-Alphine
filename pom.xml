@@ -26,7 +26,7 @@
         <dependency>
             <groupId>org.dyn4j</groupId>
             <artifactId>dyn4j</artifactId>
-            <version>4.2.0</version>
+            <version>4.2.1</version>
         </dependency>
     </dependencies>
 
@@ -37,7 +37,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>${javafx.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>Main</mainClass>
+                    <mainClass>Stars</mainClass>
                 </configuration>
             </plugin>
         </plugins>

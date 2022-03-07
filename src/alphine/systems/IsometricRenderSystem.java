@@ -1,19 +1,29 @@
 package alphine.systems;
 
-import alphine.components.TileComponent;
-import alphine.components.TransformComponent;
+import alphine.components.*;
 import alphine.ecs.Entity;
 import alphine.ecs.EntityFilter;
 import alphine.ecs.System;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import org.dyn4j.geometry.Vector2;
+import org.dyn4j.geometry.Vector3;
 
 import java.util.List;
 
 public class IsometricRenderSystem extends System {
 
+    private Image textureSet;
+
     private final EntityFilter filter = EntityFilter.create(TransformComponent.class, TileComponent.class);
-    private final double tileSize = 28;
+    private final double tileSize = 30;
+    private Canvas canvas;
+
+    public IsometricRenderSystem(Canvas canvas) {
+
+        this.canvas = canvas;
+    }
 
     @Override
     public void onRender(GraphicsContext graphics) {
@@ -23,20 +33,27 @@ public class IsometricRenderSystem extends System {
             TransformComponent transform = entity.getComponent(TransformComponent.class);
             TileComponent tile = entity.getComponent(TileComponent.class);
 
+            tile.getTileSet().loadTextures();
+
             Vector2 isoPosition = getIsometricPosition(transform.getPosition());
+            Texture texture = tile.getTexture();
 
+            Image image = texture.getImage();
+            double aspectRatio = tileSize / image.getWidth();
+            double height = image.getHeight() * aspectRatio;
 
+            graphics.drawImage(texture.getImage(), isoPosition.x, isoPosition.y + (tileSize - height), tileSize, height);
         }
     }
 
-    private Vector2 getIsometricPosition(double x, double y) {
-        double isoX = x * 0.5f * tileSize + y * -0.5f * tileSize - tileSize / 2f;
-        double isoY = x * 0.25f * tileSize + y * 0.25f * tileSize;
+    private Vector2 getIsometricPosition(double x, double y, double z) {
+        double isoX = x * 0.5f * tileSize + y * -0.5f * tileSize - tileSize / 2f + canvas.getWidth() / 2f;
+        double isoY = x * 0.25f * tileSize + y * 0.25f * tileSize + z * tileSize / 2f + canvas.getHeight() / 2f;
 
         return new Vector2(isoX, isoY);
     }
 
-    private Vector2 getIsometricPosition(Vector2 position) {
-        return getIsometricPosition(position.x, position.y);
+    private Vector2 getIsometricPosition(Vector3 position) {
+        return getIsometricPosition(position.x, position.y, position.z);
     }
 }
