@@ -21,7 +21,7 @@ public class FpsSystem extends System {
         addEntity(fpsComponent);
     }
 
-    final double smoothing = 0.99f;
+    final double smoothing = 0.9f;
     double averageFps = -1f;
     double averageDelta = -1f;
 
