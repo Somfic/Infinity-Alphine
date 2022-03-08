@@ -1,3 +1,6 @@
+import alphine.components.CameraComponent;
+import alphine.components.TransformComponent;
+import alphine.ecs.Entity;
 import alphine.ecs.World;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -15,6 +18,13 @@ public class Stars extends Application {
         launch(args);
     }
 
+    private void onStart(World world) {
+        Entity camera = new Entity("Camera");
+        camera.addComponent(new TransformComponent());
+        camera.addComponent(new CameraComponent().setZoom(20));
+        world.addEntity(camera);
+    }
+
     @Override
     public void start(Stage stage) {
         run(stage);
@@ -29,10 +39,12 @@ public class Stars extends Application {
         World world = new World();
         world.setDebug(false);
 
+        onStart(world);
+
+        world.addSystem(new TerrainSystem());
         world.addSystem(new WindowSystem(stage, scene, canvas));
         world.addSystem(new IsometricRenderSystem(canvas));
         world.addSystem(new UiSystem());
-        world.addSystem(new TerrainSystem());
         world.addSystem(new FpsSystem());
         world.addSystem(new CameraSystem(scene));
 

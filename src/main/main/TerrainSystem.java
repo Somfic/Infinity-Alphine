@@ -26,31 +26,28 @@ public class TerrainSystem extends System {
     List<TerrainLayer> layers = new ArrayList<>();
     HashMap<Vector2, Entity> blocks = new HashMap<>();
 
-    int size = 300;
+    int width = 200;
+    int height = 400;
 
     public TerrainSystem() {
-        noise.addLayer(new SimplexNoiseLayer(40, 8, 0.6, 1.5).setSeed(java.lang.System.currentTimeMillis()));
+        noise.addLayer(new SimplexNoiseLayer(50, 8, 0.6, 1.6).setSeed(java.lang.System.currentTimeMillis()));
 
-        layers.add(new TerrainLayer(0.30, tiles, 3, 2)); // Deep water
-        layers.add(new TerrainLayer(0.40, tiles, 1, 2)); // Shallow water
-        layers.add(new TerrainLayer(0.45, tiles, 9, 3)); // Sand
-        layers.add(new TerrainLayer(0.5, cubes, 3, 2)); // Grass
-        layers.add(new TerrainLayer(0.60, cubes, 5, 1)); // Grass 2
-        layers.add(new TerrainLayer(0.85, cubes, 6, 1)); // Rock
-        layers.add(new TerrainLayer(0.90, cubes, 3, 4)); // Rock 2
-        layers.add(new TerrainLayer(1.00, cubes, 1, 3)); // Snow
+        layers.add(new TerrainLayer(0.30, tiles, 3, 2));            // Deep water
+        layers.add(new TerrainLayer(0.40, tiles, 1, 2));            // Shallow water
+        layers.add(new TerrainLayer(0.45, tiles, 9, 3));            // Light sand
+        layers.add(new TerrainLayer(0.50, cubes, 9, 2));            // Dark sand
+        layers.add(new TerrainLayer(0.60, cubes, 5, 1));            // Grass
+        layers.add(new TerrainLayer(0.70, cubes, 5, 1, 0.5)); // Grass
+        layers.add(new TerrainLayer(0.85, cubes, 6, 1, 1));   // More grass
+        layers.add(new TerrainLayer(0.90, cubes, 4, 1, 1.5)); // Grass with flowers
+        layers.add(new TerrainLayer(1.00, cubes, 3, 1, 2));   // Snow
     }
 
     @Override
     public void onStart() {
-        Entity camera = new Entity("Camera");
-        camera.addComponent(new TransformComponent());
-        camera.addComponent(new CameraComponent().setZoom(20));
-        addEntity(camera);
-
-        double[][] noiseMap = noise.evaluate(size, size);
-        for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
+        double[][] noiseMap = noise.evaluate(width, height);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
                 double value = noiseMap[x][y];
 
                 TerrainLayer layer = layers.get(0);
@@ -67,7 +64,7 @@ public class TerrainSystem extends System {
                 }
 
                 Entity block = new Entity("Block");
-                block.addComponent(new TransformComponent().setPosition(x - size / 2f, y - size / 2f, value > 0.41 ? Math.floor(2f * ((value - 0.4) * -5f)) / 2f : 0));
+                block.addComponent(new TransformComponent().setPosition(x - width / 2f, y - height / 2f, layer.getOffset()));
                 block.addComponent(new TileComponent().setTileSet(layer.getTileSet()).setXY(layer.getTileX(), layer.getTileY()));
                 addEntity(block);
 
@@ -89,12 +86,22 @@ class TerrainLayer {
     private final int tileX;
     private final int tileY;
     private final double threshold;
+    private final double offset;
 
     public TerrainLayer(double threshold, TileSet tileSet, int tileX, int tileY) {
         this.tileSet = tileSet;
         this.tileX = tileX;
         this.tileY = tileY;
         this.threshold = threshold;
+        this.offset = 0;
+    }
+
+    public TerrainLayer(double threshold, TileSet tileSet, int tileX, int tileY, double offset) {
+        this.tileSet = tileSet;
+        this.tileX = tileX;
+        this.tileY = tileY;
+        this.threshold = threshold;
+        this.offset = offset;
     }
 
     public TileSet getTileSet() {
@@ -111,5 +118,9 @@ class TerrainLayer {
 
     public int getTileY() {
         return tileY;
+    }
+
+    public double getOffset() {
+        return offset;
     }
 }

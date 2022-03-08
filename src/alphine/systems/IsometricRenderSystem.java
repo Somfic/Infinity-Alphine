@@ -20,17 +20,22 @@ public class IsometricRenderSystem extends System {
     private final EntityFilter filter = EntityFilter.create(TransformComponent.class, TileComponent.class);
     private final EntityFilter cameraFilter = EntityFilter.create(TransformComponent.class, CameraComponent.class);
 
-    private Vector3 cameraPosition;
-
     private double tileSize = 20;
     private final Canvas canvas;
+
+    private CameraComponent camera;
+    private TransformComponent cameraTransform;
 
     public IsometricRenderSystem(Canvas canvas) {
         this.canvas = canvas;
     }
 
     @Override
-    public void onRender(GraphicsContext graphics) {
+    public void onStart() {
+       detectCamera();
+    }
+
+    private void detectCamera() {
         List<Entity> cameras = getEntities(cameraFilter);
         if(cameras.size() == 0) {
             Logger.warn("No camera found!");
@@ -38,10 +43,17 @@ public class IsometricRenderSystem extends System {
         }
 
         Entity cameraEntity = cameras.get(0);
-        TransformComponent cameraTransform = cameraEntity.getComponent(TransformComponent.class);
-        cameraPosition = cameraTransform.getPosition();
+        cameraTransform = cameraEntity.getComponent(TransformComponent.class);
+        camera = cameraEntity.getComponent(CameraComponent.class);
+    }
 
-        CameraComponent camera = cameraEntity.getComponent(CameraComponent.class);
+    @Override
+    public void onRender(GraphicsContext graphics) {
+        if(camera == null) {
+            detectCamera();
+            return;
+        }
+
         tileSize = camera.getZoom();
 
         List<Entity> entities = getEntities(filter);
@@ -68,8 +80,8 @@ public class IsometricRenderSystem extends System {
     }
 
     private Vector2 getIsometricPosition(double x, double y, double z) {
-        double isoX = x * 0.5f * tileSize + y * -0.5f * tileSize - tileSize / 2f + canvas.getWidth() / 2f - cameraPosition.x;
-        double isoY = x * 0.25f * tileSize + y * 0.25f * tileSize + z * tileSize / 2f + canvas.getHeight() / 2f - cameraPosition.y;
+        double isoX = x * 0.5f * tileSize + y * -0.5f * tileSize - tileSize / 2f + canvas.getWidth() / 2f - cameraTransform.getPositionX() * tileSize;
+        double isoY = x * 0.25f * tileSize + y * 0.25f * tileSize - z * tileSize / 2f + canvas.getHeight() / 2f - cameraTransform.getPositionY() * tileSize;
 
         return new Vector2(isoX, isoY);
     }

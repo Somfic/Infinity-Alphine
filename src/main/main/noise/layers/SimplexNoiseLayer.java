@@ -11,27 +11,35 @@ public class SimplexNoiseLayer implements NoiseLayer {
     private final double persistence;
     private final double lacunarity;
 
-    private final OpenSimplexNoise[] noise;
+    private OpenSimplexNoise[] noise;
 
     public SimplexNoiseLayer(double scale, int octaves, double persistence, double lacunarity) {
         this.scale = scale;
         this.octaves = octaves;
         this.persistence = persistence;
-        this.lacunarity = lacunarity;
+        this.lacunarity = lacunarity;;
+    }
 
-        this.noise = new OpenSimplexNoise[octaves];
+    public SimplexNoiseLayer setSeed(long seed) {
+        this.seed = seed;
+        generateNoises();
+        return this;
+    }
+
+    private void generateNoises() {
+        noise = new OpenSimplexNoise[octaves];
+
         for (int i = 0; i < octaves; i++) {
             noise[i] = new OpenSimplexNoise(seed + i);
         }
     }
 
-    public SimplexNoiseLayer setSeed(long seed) {
-        this.seed = seed;
-        return this;
-    }
-
     @Override
     public double evaluate(double x, double y) {
+        if (noise == null) {
+            generateNoises();
+        }
+
         double amplitude = 1;
         double frequency = 1;
 
