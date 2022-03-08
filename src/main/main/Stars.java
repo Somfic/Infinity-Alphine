@@ -32,7 +32,7 @@ public class Stars extends Application {
         world.addSystem(new WindowSystem(stage, scene, canvas));
         world.addSystem(new IsometricRenderSystem(canvas));
         world.addSystem(new UiSystem());
-        world.addSystem(new TestSystem());
+        world.addSystem(new TerrainSystem());
         world.addSystem(new FpsSystem());
         world.addSystem(new CameraSystem(scene));
 

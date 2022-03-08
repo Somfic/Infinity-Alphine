@@ -50,6 +50,11 @@ public class TileSet {
     }
 
     public Texture getTexture(int x, int y) {
-        return this.map[x][y];
+        if(x <= 0 || y <= 0 || x > map.length || y > map[0].length) {
+            Logger.warn("Tile out of bounds (" + x + ", " + y + ") for tileset '" + this.texture + "'");
+            return null;
+        }
+
+        return this.map[x - 1][y - 1];
     }
 }
