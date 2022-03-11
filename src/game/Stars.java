@@ -1,3 +1,5 @@
+package game;
+
 import alphine.components.CameraComponent;
 import alphine.components.TransformComponent;
 import alphine.ecs.Entity;

@@ -49,7 +49,7 @@ public class WindowSystem extends System implements LogListener {
         } else {
             alphine.logging.Logger.debug("Creating debug mode canvas");
 
-            // Stars pane
+            // game.Stars pane
             BorderPane mainPane = new BorderPane();
 
             // Canvas panel

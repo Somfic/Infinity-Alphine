@@ -1,3 +1,5 @@
+package game;
+
 import alphine.components.MaterialComponent;
 import alphine.components.TextComponent;
 import alphine.components.TransformComponent;

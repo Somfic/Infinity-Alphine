@@ -1,7 +1,6 @@
-package noise;
+package game.noise;
 
-import noise.layers.NoiseLayer;
-import org.dyn4j.geometry.Vector2;
+import game.noise.layers.NoiseLayer;
 
 import java.util.ArrayList;
 import java.util.List;

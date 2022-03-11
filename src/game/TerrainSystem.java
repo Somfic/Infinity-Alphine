@@ -1,11 +1,12 @@
-import alphine.components.CameraComponent;
+package game;
+
 import alphine.components.TileComponent;
 import alphine.components.TileSet;
 import alphine.components.TransformComponent;
 import alphine.ecs.Entity;
 import alphine.ecs.System;
-import noise.Noise;
-import noise.layers.SimplexNoiseLayer;
+import game.noise.Noise;
+import game.noise.layers.SimplexNoiseLayer;
 import org.dyn4j.geometry.Vector2;
 
 import java.util.ArrayList;

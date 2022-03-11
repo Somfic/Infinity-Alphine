@@ -1,6 +1,6 @@
-package noise.layers;
+package game.noise.layers;
 
-import noise.OpenSimplexNoise;
+import game.noise.OpenSimplexNoise;
 
 public class SimplexNoiseLayer implements NoiseLayer {
 

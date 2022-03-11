@@ -1,4 +1,4 @@
-package noise;
+package game.noise;
 
 public class OpenSimplexNoise {
 
