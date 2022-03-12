@@ -17,7 +17,7 @@ public class FpsSystem extends System {
         fpsComponent = new Entity("FPS Counter");
 
         fpsComponent.addComponent(new TransformComponent().setPosition(10, 20));
-        fpsComponent.addComponent(new TextComponent().setContent("FPS").setFont("Monospace").setFontSize(20));
+        fpsComponent.addComponent(new TextComponent().setContent("FPS").setFontSize(20));
         fpsComponent.addComponent(new MaterialComponent().setFill(Color.BLACK).setStrokeWidth(20));
 
         addEntity(fpsComponent);

@@ -95,7 +95,7 @@ public class WindowSystem extends System implements LogListener {
 
     @Override
     public void onRender(GraphicsContext graphics) {
-        graphics.setFill(Color.color(144f / 255f, 101f / 255f, 254f / 255f));
+        graphics.setFill(Color.color(132f / 255f, 215f / 255f, 210f / 255f));
         graphics.fillRect(0, 0, (int)Math.ceil(canvas.getWidth()), (int)Math.ceil(canvas.getHeight()));
     }
 

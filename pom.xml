@@ -37,7 +37,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>${javafx.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>game.Stars</mainClass>
+                    <mainClass>game.Magma</mainClass>
                 </configuration>
             </plugin>
         </plugins>

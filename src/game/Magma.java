@@ -4,6 +4,7 @@ import alphine.components.CameraComponent;
 import alphine.components.TransformComponent;
 import alphine.ecs.Entity;
 import alphine.ecs.World;
+import game.terrain.TerrainSystem;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -14,7 +15,7 @@ import javafx.stage.Stage;
 import alphine.logging.Logger;
 import alphine.systems.*;
 
-public class Stars extends Application {
+public class Magma extends Application {
 
     public static void main(String[] args) {
         launch(args);
@@ -43,7 +44,7 @@ public class Stars extends Application {
 
         onStart(world);
 
-        world.addSystem(new TerrainSystem());
+        world.addSystem(new TerrainSystem(scene));
         world.addSystem(new WindowSystem(stage, scene, canvas));
         world.addSystem(new IsometricRenderSystem(canvas));
         world.addSystem(new UiSystem());
@@ -69,7 +70,7 @@ public class Stars extends Application {
                 double dt = (now - last) / 1e9;
                 last = now;
 
-                world.fixedUpdate(dt, 1f / 50f);
+                world.fixedUpdate(dt, 1f / 60f);
                 world.update(dt);
                 world.render(graphics);
             }

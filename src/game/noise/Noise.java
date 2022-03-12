@@ -50,5 +50,9 @@ public class Noise {
 
         return values;
     }
+
+    public void removeLayers() {
+        layers.clear();
+    }
 }
 
